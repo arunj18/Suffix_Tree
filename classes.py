@@ -1,3 +1,25 @@
+##########################################################################################
+# Author: Arun John 16-Nov-2017                                                          #
+##########################################################################################
+#											 #
+##########################################################################################
+# Notes: 										 #
+#	1. The search() method and first_occur() methods do not support more than one 	 #
+#          word and only accepts lower case input without any punctuations. No error     #
+#	   handling has been done right now but will be implemented in the future for    #
+#	   both these methods. In the future, these methods may also support searching   #
+#	   for a string instead of only a word. 					 #
+#											 #
+#	2. The rel() method also takes inputs only in lower case and without any 	 #
+#	   punctuation. Error handling for this method is also not implemented yet and   #
+#	   may be done in the future.							 #
+#											 #
+#	3. Comments will also be added in methods in the future to better explain what   #
+#	   is happening in each of the methods and suggestions for better performance.	 #
+#											 #
+##########################################################################################
+
+
 import os
 class GStree(object):
 	class Node(object):
@@ -37,27 +59,41 @@ class GStree(object):
 		print("Tree status: ",self.tree_status()," words")
 	def search(self,word):
 		word=word.split(' ')
-		if(type(word)==list):
+		if(len(word)>1):
 			print("Erroneous Usage. More than one word detected. Use .rel() instead")
 			return
+		word=word[0]
 		occur=self.check_word(word)
 		if(occur):
 			for x in occur:
 				print("Found in Title: ",self.working_data[x[0]][0])
-				if(x[1]-5<0):
-					f_i=0
-				else:
-					f_i=x[1]
-				if(x[1]+5>len(self.working_data[x[0]][1])-1):
-					e_i=len(self.working_data[x[0]][1])-1
-				else:
-					e_i=x[1]+5
-				print("Phrase: ",end=' ')
-				for y in range(f_i,e_i+1):
-					print(self.working_data[x[0]][1][y],end=' ')
-				print('\n')
+				self.print_locality(x[0],x[1])
 		else:
 			print("No occurences found")
+	def print_locality(self,title,s_i,o_i=-1):
+		e_i=s_i		
+		if(s_i - 5 < 0):
+			s_i=0
+		else:
+			s_i=s_i-5
+		if(o_i != -1):
+			if(o_i + 5 > len(self.working_data[title][1])-1):
+				o_i=len(self.working_data[title][1])-1
+			else:
+				o_i=o_i+5
+			print("Phrase: ",end=' ')
+			for y in range(s_i,o_i+1):
+				print(self.working_data[title][1][y], end=' ')
+			print("\n---------------------------------------------------------")
+		else:
+			if(e_i + 5 > len(self.working_data[title][1]) - 1):
+				e_i=len(self.working_data[title][1]) -1
+			else:
+				e_i= e_i + 5
+			print("Phase: ",end= ' ')
+			for y in range(s_i,e_i + 1):
+				print(self.working_data[title][1][y],end=' ')
+			print("\n---------------------------------------------------------")
 	def rel(self,sentence):
 		sentence=sentence.split(' ')
 		flag=False
@@ -92,16 +128,12 @@ class GStree(object):
 					for y in scores[x]:
 						flag=True
 						print("Title: ",self.working_data[y[0]][0])
-						for z in range(y[2],y[1]+1):
-							print(self.working_data[y[0]][1][z], end=" ")
-						print("\n---------------------------------------------------------")
+						self.print_locality(y[0],y[2],y[1])
 				else:
 					y=scores[x]
 					flag=True
 					print("Title: ",self.working_data[y[0]][0])
-					for z in range(y[2],y[1]+1):
-						print(self.working_data[y[0]][1][z], end= " ")
-					print("\n-------------------------------------------------------------")
+					self.print_locality(y[0],y[2],y[1])					
 			if(flag==False):
 				print("No occurences found")
 	def get_scores(self,title_wise,sentence):
@@ -262,6 +294,8 @@ class GStree(object):
 		for x in range(len(title_wise)):
 			print("Title : ",self.working_data[x][0])
 			if(title_wise[x]):
-				print("Word :",self.working_data[x][1][title_wise[x][0]])
+				self.print_locality(x,title_wise[x][0])
 			else:
 				print("No occurences")
+
+##########################################################################################
