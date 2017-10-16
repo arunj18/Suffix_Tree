@@ -1,4 +1,4 @@
-														Suffix Tree
+						Suffix Tree
 
 Implementation of a Generalized Suffix Tree in python for Advanced Algorithms Assignment II. 
 
