@@ -12,3 +12,8 @@ Changes may be made to this code in the future to make the running more efficien
 and I will look into it.
 
 While the client.py checks for version details, this implementation runs on Python 3.6.1
+
+Please use the AesopTales.txt provided with this archive as the original AesopTales.txt has some formatting issues.
+
+Please refer to the following link for future additions.
+https://github.com/arunj18/Suffix_Tree
